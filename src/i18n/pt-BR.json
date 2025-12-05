@@ -1,0 +1,80 @@
+{
+  "common": {
+    "appName": "🎯 PokeGuy",
+    "admin": "Administrador",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "copy": "Copiar",
+    "copied": "Copiado!",
+    "connecting": "Conectando...",
+    "loading": "Carregando..."
+  },
+  "home": {
+    "title": "🎯 PokeGuy",
+    "subtitle": "Votação em tempo real para equipes ágeis",
+    "description": "Crie uma sessão, compartilhe o link e comece a votar em tarefas juntos!",
+    "createSession": "Criar Nova Sessão",
+    "creating": "Criando...",
+    "noAccount": "Sem conta necessária • Grátis para sempre"
+  },
+  "session": {
+    "copyLink": "📋 Copiar Link",
+    "participants": "Participantes",
+    "waitingForTask": "Aguardando tarefa...",
+    "waitingForTaskDescription": "O administrador criará uma tarefa para votar",
+    "votingInProgress": "Votação em andamento",
+    "votesRevealed": "Votos revelados",
+    "noUsersYet": "Ainda não há usuários",
+    "shareLinkToInvite": "Compartilhe o link para convidar outros",
+    "waitingForTaskToStart": "Aguardando tarefa para começar..."
+  },
+  "joinModal": {
+    "title": "Entrar na Sessão",
+    "description": "Digite seu nome para entrar na sessão de votação",
+    "namePlaceholder": "Seu nome",
+    "joinButton": "Entrar na Sessão",
+    "joining": "Entrando...",
+    "error": "Falha ao entrar na sessão"
+  },
+  "changeNameModal": {
+    "title": "Alterar Nome",
+    "description": "Digite um novo nome de exibição para esta sessão",
+    "namePlaceholder": "Seu nome"
+  },
+  "adminControls": {
+    "title": "Controles do Administrador",
+    "taskPlaceholder": "Digite o título da tarefa...",
+    "createTask": "Criar Tarefa",
+    "revealVotes": "🎉 Revelar Votos",
+    "newTask": "✨ Nova Tarefa",
+    "createTaskToStart": "Crie uma tarefa para começar a votar",
+    "votingInProgress": "Votação em andamento...",
+    "votesRevealed": "Votos revelados! Crie uma nova tarefa para continuar"
+  },
+  "voteResults": {
+    "title": "Resultados",
+    "consensusReached": "🎉 Consenso alcançado! Todos votaram {vote}",
+    "voteDistribution": "Distribuição de Votos:",
+    "vote": "voto",
+    "votes": "votos",
+    "average": "Média",
+    "onBreak": "☕ Em pausa: {names}",
+    "unsure": "❓ Incerto: {names}"
+  },
+  "sessionEnded": {
+    "title": "Sessão Encerrada",
+    "description": "O administrador saiu da sessão.",
+    "thanks": "Obrigado por participar! Você pode criar uma nova sessão ou entrar em outra.",
+    "returnToHome": "Voltar para o Início"
+  },
+  "language": {
+    "en-US": "English",
+    "pt-BR": "Português",
+    "es-PE": "Español"
+  },
+  "theme": {
+    "system": "Sistema",
+    "dark": "Escuro",
+    "light": "Claro"
+  }
+}

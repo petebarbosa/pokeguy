@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useState, useEffect, useRef, use } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useSocket } from '@/hooks/use-socket';
@@ -15,13 +15,19 @@ import { VoteResults } from '@/components/vote-results';
 import { SessionEndedModal } from '@/components/session-ended-modal';
 import { ChangeNameModal } from '@/components/change-name-modal';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { LanguageSwitcher } from '@/components/language-switcher';
 import { triggerFireworks } from '@/components/fireworks';
+import { useTranslations } from '@/i18n/context';
 
-export default function SessionPage() {
-  const params = useParams();
+interface SessionPageProps {
+  params: Promise<{ code: string; locale: string }>;
+}
+
+export default function SessionPage({ params }: SessionPageProps) {
+  const { code: sessionCode } = use(params);
   const searchParams = useSearchParams();
-  const sessionCode = params.code as string;
   const isAdmin = searchParams.get('admin') === 'true';
+  const { t } = useTranslations();
 
   const { socket, isConnected } = useSocket();
   const {
@@ -82,7 +88,7 @@ export default function SessionPage() {
     if (success) {
       setShowJoinModal(false);
     } else {
-      setJoinError(error || 'Failed to join session');
+      setJoinError(error || t('joinModal.error'));
     }
     setIsJoining(false);
     return success;
@@ -102,7 +108,7 @@ export default function SessionPage() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center transition-colors">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-300">Connecting...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-300">{t('common.connecting')}</p>
         </div>
       </div>
     );
@@ -133,19 +139,20 @@ export default function SessionPage() {
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              🎯 PokeGuy
+              {t('common.appName')}
             </h1>
             <Badge variant="outline" className="font-mono dark:border-gray-600 dark:text-gray-300">
               {sessionCode}
             </Badge>
             {isAdmin && (
               <Badge variant="secondary" className="bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300">
-                Admin
+                {t('common.admin')}
               </Badge>
             )}
           </div>
 
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
             <ThemeToggle />
             {!isAdmin && currentUser && (
               <Button
@@ -162,7 +169,7 @@ export default function SessionPage() {
               onClick={handleCopyLink}
               className="hidden sm:flex"
             >
-              {copied ? '✓ Copied!' : '📋 Copy Link'}
+              {copied ? `✓ ${t('common.copied')}` : t('session.copyLink')}
             </Button>
             <Button
               variant="outline"
@@ -206,7 +213,7 @@ export default function SessionPage() {
           {/* Users Grid */}
           <div>
             <h3 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-200">
-              Participants ({session?.users.length || 0})
+              {t('session.participants')} ({session?.users.length || 0})
             </h3>
             <UsersGrid
               users={session?.users || []}

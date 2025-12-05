@@ -2,9 +2,11 @@
 
 import { useTheme } from './theme-provider';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from '@/i18n/context';
 
 export function ThemeToggle() {
   const { theme, setTheme, resolvedTheme } = useTheme();
+  const { t } = useTranslations();
 
   const cycleTheme = () => {
     if (theme === 'light') {
@@ -25,9 +27,9 @@ export function ThemeToggle() {
 
   const getLabel = () => {
     if (theme === 'system') {
-      return 'System';
+      return t('theme.system');
     }
-    return theme === 'dark' ? 'Dark' : 'Light';
+    return theme === 'dark' ? t('theme.dark') : t('theme.light');
   };
 
   return (

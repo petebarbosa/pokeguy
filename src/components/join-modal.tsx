@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from '@/i18n/context';
 
 interface JoinModalProps {
   open: boolean;
@@ -20,6 +21,7 @@ interface JoinModalProps {
 
 export function JoinModal({ open, onJoin, isLoading, error }: JoinModalProps) {
   const [name, setName] = useState('');
+  const { t } = useTranslations();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,16 +35,16 @@ export function JoinModal({ open, onJoin, isLoading, error }: JoinModalProps) {
       <DialogContent className="sm:max-w-md dark:bg-gray-800 dark:border-gray-700" onPointerDownOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center dark:text-gray-100">
-            Join Session
+            {t('joinModal.title')}
           </DialogTitle>
           <DialogDescription className="text-center dark:text-gray-400">
-            Enter your name to join the voting session
+            {t('joinModal.description')}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Input
-              placeholder="Your name"
+              placeholder={t('joinModal.namePlaceholder')}
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={isLoading}
@@ -58,7 +60,7 @@ export function JoinModal({ open, onJoin, isLoading, error }: JoinModalProps) {
             disabled={!name.trim() || isLoading}
             className="w-full py-6 text-lg font-semibold"
           >
-            {isLoading ? 'Joining...' : 'Join Session'}
+            {isLoading ? t('joinModal.joining') : t('joinModal.joinButton')}
           </Button>
         </form>
       </DialogContent>
