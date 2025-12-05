@@ -8,7 +8,7 @@ import {
   ServerToClientEvents,
   ClientToServerEvents,
 } from '../types';
-import { getRandomCharacter } from '../lib/characters';
+import { getRandomCharacter } from '../lib/characters-data';
 
 // In-memory storage
 const sessions = new Map<string, Session>();

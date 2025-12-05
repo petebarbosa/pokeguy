@@ -18,6 +18,9 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["server.ts", "src/server/**/*", "src/types/**/*", "src/lib/characters.ts"],
-  "exclude": ["node_modules"]
+  "include": ["server.ts", "src/server/**/*", "src/types/**/*", "src/lib/characters-data.ts"],
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "files": true
+  }
 }

@@ -1,3 +1,4 @@
+// Client-side characters with images
 import PeterGriffin from '@/assets/Peter_Griffin.png';
 import LoisGriffin from '@/assets/Lois_Griffin.png';
 import StewieGriffin from '@/assets/Stewie_Griffin.png';
@@ -11,6 +12,11 @@ import Herbert from '@/assets/Herbert.png';
 import AngryMonkey from '@/assets/Angry_monkey.png';
 import God from '@/assets/God.png';
 import { StaticImageData } from 'next/image';
+import {
+  FAMILY_GUY_CHARACTERS_DATA,
+  getCharacterInitials as getInitials,
+  getCharacterColor as getColor,
+} from './characters-data';
 
 export interface Character {
   name: string;
@@ -18,46 +24,31 @@ export interface Character {
   color: string;
 }
 
-export const FAMILY_GUY_CHARACTERS: Character[] = [
-  { name: 'Peter Griffin', image: PeterGriffin, color: '#4A90D9' },
-  { name: 'Lois Griffin', image: LoisGriffin, color: '#E74C3C' },
-  { name: 'Stewie Griffin', image: StewieGriffin, color: '#F1C40F' },
-  { name: 'Brian Griffin', image: BrianGriffin, color: '#ECF0F1' },
-  { name: 'Chris Griffin', image: ChrisGriffin, color: '#E67E22' },
-  { name: 'Meg Griffin', image: MegGriffin, color: '#9B59B6' },
-  { name: 'Glenn Quagmire', image: GlennQuagmire, color: '#2ECC71' },
-  { name: 'Cleveland Brown', image: ClevelandBrown, color: '#8B4513' },
-  { name: 'Joe Swanson', image: JoeSwanson, color: '#3498DB' },
-  { name: 'Herbert', image: Herbert, color: '#95A5A6' },
-  { name: 'Angry Monkey', image: AngryMonkey, color: '#8B4513' },
-  { name: 'God', image: God, color: '#FFD700' },
-];
+// Map character names to their imported images
+const characterImages: Record<string, StaticImageData> = {
+  'Peter Griffin': PeterGriffin,
+  'Lois Griffin': LoisGriffin,
+  'Stewie Griffin': StewieGriffin,
+  'Brian Griffin': BrianGriffin,
+  'Chris Griffin': ChrisGriffin,
+  'Meg Griffin': MegGriffin,
+  'Glenn Quagmire': GlennQuagmire,
+  'Cleveland Brown': ClevelandBrown,
+  'Joe Swanson': JoeSwanson,
+  'Herbert': Herbert,
+  'Angry Monkey': AngryMonkey,
+  'God': God,
+};
 
-export function getRandomCharacter(excludeList: string[] = []): Character {
-  const availableCharacters = FAMILY_GUY_CHARACTERS.filter(
-    (char) => !excludeList.includes(char.name)
-  );
-
-  // If all characters are taken, allow duplicates
-  const pool = availableCharacters.length > 0 ? availableCharacters : FAMILY_GUY_CHARACTERS;
-
-  const randomIndex = Math.floor(Math.random() * pool.length);
-  return pool[randomIndex];
-}
+// Combine character data with images
+export const FAMILY_GUY_CHARACTERS: Character[] = FAMILY_GUY_CHARACTERS_DATA.map((char) => ({
+  ...char,
+  image: characterImages[char.name],
+}));
 
 export function getCharacterByName(name: string): Character | undefined {
   return FAMILY_GUY_CHARACTERS.find((char) => char.name === name);
 }
 
-export function getCharacterInitials(characterName: string): string {
-  return characterName
-    .split(' ')
-    .map((word) => word[0])
-    .join('')
-    .toUpperCase();
-}
-
-export function getCharacterColor(characterName: string): string {
-  const character = getCharacterByName(characterName);
-  return character?.color || '#6B7280';
-}
+// Re-export utility functions from characters-data
+export { getInitials as getCharacterInitials, getColor as getCharacterColor };
