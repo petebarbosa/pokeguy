@@ -44,7 +44,7 @@ export function UserCard({ user, isRevealed, isCurrentUser }: UserCardProps) {
                   alt={user.character}
                   width={80}
                   height={80}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-top"
                 />
               ) : (
                 <span className="text-white font-bold text-xl sm:text-2xl">
