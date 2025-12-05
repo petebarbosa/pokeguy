@@ -18,6 +18,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { triggerFireworks } from '@/components/fireworks';
 import { useTranslations } from '@/i18n/context';
+import Image from 'next/image';
 
 interface SessionPageProps {
   params: Promise<{ code: string; locale: string }>;
@@ -138,7 +139,14 @@ export default function SessionPage({ params }: SessionPageProps) {
       <header className="sticky top-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b dark:border-gray-700 transition-colors">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2">
+              <Image
+                src="/family_guy.png"
+                alt="Family Guy"
+                width={28}
+                height={28}
+                className="inline-block"
+              />
               {t('common.appName')}
             </h1>
             <Badge variant="outline" className="font-mono dark:border-gray-600 dark:text-gray-300">

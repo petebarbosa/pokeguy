@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "🎯 PokeGuy",
+    "appName": "PokeGuy",
     "admin": "Administrador",
     "cancel": "Cancelar",
     "save": "Salvar",
@@ -10,7 +10,7 @@
     "loading": "Carregando..."
   },
   "home": {
-    "title": "🎯 PokeGuy",
+    "title": "PokeGuy",
     "subtitle": "Votação em tempo real para equipes ágeis",
     "description": "Crie uma sessão, compartilhe o link e comece a votar em tarefas juntos!",
     "createSession": "Criar Nova Sessão",
