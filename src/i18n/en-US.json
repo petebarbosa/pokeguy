@@ -1,0 +1,80 @@
+{
+  "common": {
+    "appName": "🎯 PokeGuy",
+    "admin": "Admin",
+    "cancel": "Cancel",
+    "save": "Save",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "connecting": "Connecting...",
+    "loading": "Loading..."
+  },
+  "home": {
+    "title": "🎯 PokeGuy",
+    "subtitle": "Real-time voting for agile teams",
+    "description": "Create a session, share the link, and start voting on tasks together!",
+    "createSession": "Create New Session",
+    "creating": "Creating...",
+    "noAccount": "No account required • Free forever"
+  },
+  "session": {
+    "copyLink": "📋 Copy Link",
+    "participants": "Participants",
+    "waitingForTask": "Waiting for task...",
+    "waitingForTaskDescription": "The admin will create a task to vote on",
+    "votingInProgress": "Voting in progress",
+    "votesRevealed": "Votes revealed",
+    "noUsersYet": "No users yet",
+    "shareLinkToInvite": "Share the link to invite others",
+    "waitingForTaskToStart": "Waiting for task to start..."
+  },
+  "joinModal": {
+    "title": "Join Session",
+    "description": "Enter your name to join the voting session",
+    "namePlaceholder": "Your name",
+    "joinButton": "Join Session",
+    "joining": "Joining...",
+    "error": "Failed to join session"
+  },
+  "changeNameModal": {
+    "title": "Change Name",
+    "description": "Enter a new display name for this session",
+    "namePlaceholder": "Your name"
+  },
+  "adminControls": {
+    "title": "Admin Controls",
+    "taskPlaceholder": "Enter task title...",
+    "createTask": "Create Task",
+    "revealVotes": "🎉 Reveal Votes",
+    "newTask": "✨ New Task",
+    "createTaskToStart": "Create a task to start voting",
+    "votingInProgress": "Voting in progress...",
+    "votesRevealed": "Votes revealed! Create a new task to continue"
+  },
+  "voteResults": {
+    "title": "Results",
+    "consensusReached": "🎉 Consensus reached! Everyone voted {vote}",
+    "voteDistribution": "Vote Distribution:",
+    "vote": "vote",
+    "votes": "votes",
+    "average": "Average",
+    "onBreak": "☕ On break: {names}",
+    "unsure": "❓ Unsure: {names}"
+  },
+  "sessionEnded": {
+    "title": "Session Ended",
+    "description": "The admin has left the session.",
+    "thanks": "Thanks for participating! You can create a new session or join another one.",
+    "returnToHome": "Return to Home"
+  },
+  "language": {
+    "en-US": "English",
+    "pt-BR": "Português",
+    "es-PE": "Español"
+  },
+  "theme": {
+    "system": "System",
+    "dark": "Dark",
+    "light": "Light"
+  }
+}

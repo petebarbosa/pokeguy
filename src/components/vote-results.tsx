@@ -2,6 +2,7 @@
 
 import { User, VoteValue } from '@/types';
 import { Card } from '@/components/ui/card';
+import { useTranslations } from '@/i18n/context';
 
 interface VoteResultsProps {
   users: User[];
@@ -10,6 +11,8 @@ interface VoteResultsProps {
 const NUMERIC_VOTES: VoteValue[] = ['1', '2', '3', '5', '8'];
 
 export function VoteResults({ users }: VoteResultsProps) {
+  const { t } = useTranslations();
+
   // Filter out users who didn't vote or are on break
   const votingUsers = users.filter(
     (u) => u.hasVoted && u.vote !== '☕' && u.vote !== '❓' && u.vote !== null
@@ -44,20 +47,20 @@ export function VoteResults({ users }: VoteResultsProps) {
 
   return (
     <Card className="p-4 space-y-4 dark:bg-gray-800 dark:border-gray-700">
-      <h3 className="font-semibold text-lg dark:text-gray-100">Results</h3>
+      <h3 className="font-semibold text-lg dark:text-gray-100">{t('voteResults.title')}</h3>
       
       {/* Consensus celebration */}
       {hasConsensus && (
         <div className="bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-700 rounded-lg p-3 text-center">
           <p className="text-green-800 dark:text-green-300 font-semibold text-lg">
-            🎉 Consensus reached! Everyone voted {uniqueVotes[0]}
+            {t('voteResults.consensusReached', { vote: String(uniqueVotes[0]) })}
           </p>
         </div>
       )}
 
       {/* Vote distribution */}
       <div className="space-y-2">
-        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Vote Distribution:</p>
+        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('voteResults.voteDistribution')}</p>
         <div className="flex flex-wrap gap-3">
           {Object.entries(voteDistribution).map(([vote, count]) => (
             <div
@@ -66,7 +69,7 @@ export function VoteResults({ users }: VoteResultsProps) {
             >
               <span className="text-xl font-bold dark:text-gray-100">{vote}</span>
               <span className="text-gray-600 dark:text-gray-300">
-                {count} vote{count !== 1 ? 's' : ''}
+                {count} {count !== 1 ? t('voteResults.votes') : t('voteResults.vote')}
               </span>
             </div>
           ))}
@@ -76,7 +79,7 @@ export function VoteResults({ users }: VoteResultsProps) {
       {/* Average */}
       {numericVotes.length > 0 && (
         <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-3">
-          <p className="text-sm text-blue-600 dark:text-blue-400">Average</p>
+          <p className="text-sm text-blue-600 dark:text-blue-400">{t('voteResults.average')}</p>
           <p className="text-2xl font-bold text-blue-800 dark:text-blue-300">
             {average.toFixed(1)}
           </p>
@@ -88,12 +91,12 @@ export function VoteResults({ users }: VoteResultsProps) {
         <div className="border-t dark:border-gray-700 pt-3 space-y-2">
           {breakUsers.length > 0 && (
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              ☕ On break: {breakUsers.map((u) => u.name).join(', ')}
+              {t('voteResults.onBreak', { names: breakUsers.map((u) => u.name).join(', ') })}
             </p>
           )}
           {unsureUsers.length > 0 && (
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              ❓ Unsure: {unsureUsers.map((u) => u.name).join(', ')}
+              {t('voteResults.unsure', { names: unsureUsers.map((u) => u.name).join(', ') })}
             </p>
           )}
         </div>

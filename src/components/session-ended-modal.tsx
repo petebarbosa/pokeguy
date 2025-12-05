@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from '@/i18n/context';
 
 interface SessionEndedModalProps {
   open: boolean;
@@ -16,9 +17,10 @@ interface SessionEndedModalProps {
 
 export function SessionEndedModal({ open }: SessionEndedModalProps) {
   const router = useRouter();
+  const { t, locale } = useTranslations();
 
   const handleReturn = () => {
-    router.push('/');
+    router.push(`/${locale}`);
   };
 
   return (
@@ -30,21 +32,21 @@ export function SessionEndedModal({ open }: SessionEndedModalProps) {
       >
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center dark:text-gray-100">
-            Session Ended
+            {t('sessionEnded.title')}
           </DialogTitle>
           <DialogDescription className="text-center text-lg dark:text-gray-400">
-            The admin has left the session.
+            {t('sessionEnded.description')}
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col items-center gap-4 pt-4">
           <p className="text-gray-500 dark:text-gray-400 text-center">
-            Thanks for participating! You can create a new session or join another one.
+            {t('sessionEnded.thanks')}
           </p>
           <Button
             onClick={handleReturn}
             className="w-full py-6 text-lg font-semibold"
           >
-            Return to Home
+            {t('sessionEnded.returnToHome')}
           </Button>
         </div>
       </DialogContent>

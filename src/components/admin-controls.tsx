@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { useTranslations } from '@/i18n/context';
 
 interface AdminControlsProps {
   isVotingActive: boolean;
@@ -23,6 +24,7 @@ export function AdminControls({
   onNewTask,
 }: AdminControlsProps) {
   const [taskTitle, setTaskTitle] = useState('');
+  const { t } = useTranslations();
 
   const handleCreateTask = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,12 +36,12 @@ export function AdminControls({
 
   return (
     <Card className="p-4 space-y-4 dark:bg-gray-800 dark:border-gray-700">
-      <h3 className="font-semibold text-lg dark:text-gray-100">Admin Controls</h3>
+      <h3 className="font-semibold text-lg dark:text-gray-100">{t('adminControls.title')}</h3>
       
       {/* Create Task Form */}
       <form onSubmit={handleCreateTask} className="flex gap-2">
         <Input
-          placeholder="Enter task title..."
+          placeholder={t('adminControls.taskPlaceholder')}
           value={taskTitle}
           onChange={(e) => setTaskTitle(e.target.value)}
           disabled={isVotingActive && !isRevealed}
@@ -49,7 +51,7 @@ export function AdminControls({
           type="submit"
           disabled={!taskTitle.trim() || (isVotingActive && !isRevealed)}
         >
-          Create Task
+          {t('adminControls.createTask')}
         </Button>
       </form>
 
@@ -61,7 +63,7 @@ export function AdminControls({
           disabled={!isVotingActive || isRevealed}
           className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
         >
-          🎉 Reveal Votes
+          {t('adminControls.revealVotes')}
         </Button>
 
         {isRevealed && (
@@ -69,16 +71,16 @@ export function AdminControls({
             variant="outline"
             onClick={onNewTask}
           >
-            ✨ New Task
+            {t('adminControls.newTask')}
           </Button>
         )}
       </div>
 
       {/* Status */}
       <div className="text-sm text-gray-500 dark:text-gray-400">
-        {!hasTask && 'Create a task to start voting'}
-        {hasTask && isVotingActive && !isRevealed && 'Voting in progress...'}
-        {isRevealed && 'Votes revealed! Create a new task to continue'}
+        {!hasTask && t('adminControls.createTaskToStart')}
+        {hasTask && isVotingActive && !isRevealed && t('adminControls.votingInProgress')}
+        {isRevealed && t('adminControls.votesRevealed')}
       </div>
     </Card>
   );

@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useTranslations } from '@/i18n/context';
 
 interface ChangeNameModalProps {
   open: boolean;
@@ -27,6 +28,7 @@ export function ChangeNameModal({
   error,
 }: ChangeNameModalProps) {
   const [name, setName] = useState(currentName);
+  const { t } = useTranslations();
 
   // Reset name when modal opens with new currentName
   const [prevOpen, setPrevOpen] = useState(open);
@@ -53,14 +55,14 @@ export function ChangeNameModal({
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <DialogContent className="sm:max-w-md dark:bg-gray-800 dark:border-gray-700">
         <DialogHeader>
-          <DialogTitle className="dark:text-gray-100">Change Name</DialogTitle>
+          <DialogTitle className="dark:text-gray-100">{t('changeNameModal.title')}</DialogTitle>
           <DialogDescription className="dark:text-gray-400">
-            Enter a new display name for this session
+            {t('changeNameModal.description')}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <Input
-            placeholder="Your name"
+            placeholder={t('changeNameModal.namePlaceholder')}
             value={name}
             onChange={(e) => setName(e.target.value)}
             autoFocus
@@ -71,10 +73,10 @@ export function ChangeNameModal({
           )}
           <div className="flex gap-2">
             <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" className="flex-1">
-              Save
+              {t('common.save')}
             </Button>
           </div>
         </form>

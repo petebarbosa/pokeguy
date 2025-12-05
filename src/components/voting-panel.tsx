@@ -3,6 +3,7 @@
 import { VoteValue } from '@/types';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useTranslations } from '@/i18n/context';
 
 interface VotingPanelProps {
   currentVote: VoteValue;
@@ -13,6 +14,8 @@ interface VotingPanelProps {
 const VOTE_OPTIONS: VoteValue[] = ['☕', '❓', '1', '2', '3', '5', '8'];
 
 export function VotingPanel({ currentVote, onVote, disabled }: VotingPanelProps) {
+  const { t } = useTranslations();
+
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t dark:border-gray-700 shadow-lg p-4 md:relative md:border md:rounded-lg md:shadow-md transition-colors">
       <div className="flex justify-center gap-2 sm:gap-3 flex-wrap max-w-2xl mx-auto">
@@ -36,7 +39,7 @@ export function VotingPanel({ currentVote, onVote, disabled }: VotingPanelProps)
       </div>
       {disabled && (
         <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">
-          Waiting for task to start...
+          {t('session.waitingForTaskToStart')}
         </p>
       )}
     </div>

@@ -2,6 +2,7 @@
 
 import { User } from '@/types';
 import { UserCard } from './user-card';
+import { useTranslations } from '@/i18n/context';
 
 interface UsersGridProps {
   users: User[];
@@ -10,11 +11,13 @@ interface UsersGridProps {
 }
 
 export function UsersGrid({ users, isRevealed, currentUserId }: UsersGridProps) {
+  const { t } = useTranslations();
+
   if (users.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-        <p className="text-lg">No users yet</p>
-        <p className="text-sm">Share the link to invite others</p>
+        <p className="text-lg">{t('session.noUsersYet')}</p>
+        <p className="text-sm">{t('session.shareLinkToInvite')}</p>
       </div>
     );
   }
