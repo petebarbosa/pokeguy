@@ -8,6 +8,7 @@ import { connectSocket } from '@/lib/socket';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { useTranslations } from '@/i18n/context';
+import Image from 'next/image';
 
 export default function Home() {
   const router = useRouter();
@@ -33,7 +34,16 @@ export default function Home() {
 
       <Card className="w-full max-w-md p-8 text-center space-y-6 dark:bg-gray-800 dark:border-gray-700">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">{t('home.title')}</h1>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white flex items-center justify-center gap-3">
+            <Image
+              src="/family_guy.png"
+              alt="Family Guy"
+              width={40}
+              height={40}
+              className="inline-block"
+            />
+            {t('home.title')}
+          </h1>
           <p className="text-gray-600 dark:text-gray-300">
             {t('home.subtitle')}
           </p>
