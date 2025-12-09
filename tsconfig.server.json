@@ -9,18 +9,13 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
     "outDir": "./dist",
+    "rootDir": ".",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
   "include": ["server.ts", "src/server/**/*", "src/types/**/*", "src/lib/characters-data.ts"],
-  "exclude": ["node_modules"],
-  "ts-node": {
-    "files": true
-  }
+  "exclude": ["node_modules"]
 }
