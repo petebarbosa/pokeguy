@@ -3,7 +3,11 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/i18n/context";
-import { isValidLocale, defaultLocale, type Locale } from "@/i18n";
+import { isValidLocale, defaultLocale, locales, type Locale } from "@/i18n";
+
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
