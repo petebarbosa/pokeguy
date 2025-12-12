@@ -9,6 +9,25 @@ interface VoteResultsProps {
 }
 
 const NUMERIC_VOTES = ['1', '2', '3', '5', '8'] as const;
+const NUMERIC_VALUES = [1, 2, 3, 5, 8] as const;
+
+// Rounds a number to the nearest valid vote option
+function roundToNearestVoteOption(value: number): number {
+  if (value <= 0) return 1;
+  
+  let closest = NUMERIC_VALUES[0];
+  let minDiff = Math.abs(value - closest);
+  
+  for (const option of NUMERIC_VALUES) {
+    const diff = Math.abs(value - option);
+    if (diff < minDiff) {
+      minDiff = diff;
+      closest = option;
+    }
+  }
+  
+  return closest;
+}
 
 export function VoteResults({ users }: VoteResultsProps) {
   const { t } = useTranslations();
@@ -67,14 +86,18 @@ export function VoteResults({ users }: VoteResultsProps) {
           {NUMERIC_VOTES.map((vote) => {
             const count = voteDistribution[vote] || 0;
             const maxCount = Math.max(...Object.values(voteDistribution), 1);
-            const barHeight = count > 0 ? `${(count / maxCount) * 90}%` : '2px';
+            // Use pixel values: max bar height is 100px, minimum is 4px for empty
+            const maxBarHeight = 100;
+            const barHeight = count > 0 
+              ? Math.max((count / maxCount) * maxBarHeight, 8) 
+              : 4;
 
             return (
-              <div key={vote} className="flex flex-col items-center gap-2 w-10 text-center">
+              <div key={vote} className="flex flex-col items-center gap-1 w-10 text-center">
                 <div className="text-xs font-bold text-gray-500 dark:text-gray-400">{count}</div>
                 <div
                   className="w-full bg-blue-400 dark:bg-blue-600 rounded-t-md hover:bg-blue-500 dark:hover:bg-blue-500 transition-all"
-                  style={{ height: barHeight }}
+                  style={{ height: `${barHeight}px` }}
                 />
                 <div className="text-sm font-semibold dark:text-gray-200">{vote}</div>
               </div>
@@ -88,7 +111,7 @@ export function VoteResults({ users }: VoteResultsProps) {
         <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-3">
           <p className="text-sm text-blue-600 dark:text-blue-400">{t('voteResults.average')}</p>
           <p className="text-2xl font-bold text-blue-800 dark:text-blue-300">
-            {average.toFixed(1)}
+            {roundToNearestVoteOption(average)}
           </p>
         </div>
       )}
