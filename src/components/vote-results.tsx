@@ -15,7 +15,7 @@ const NUMERIC_VALUES = [1, 2, 3, 5, 8] as const;
 function roundToNearestVoteOption(value: number): number {
   if (value <= 0) return 1;
   
-  let closest = NUMERIC_VALUES[0];
+  let closest: (typeof NUMERIC_VALUES)[number] = NUMERIC_VALUES[0];
   let minDiff = Math.abs(value - closest);
   
   for (const option of NUMERIC_VALUES) {
