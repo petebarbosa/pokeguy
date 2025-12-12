@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useCallback, useMemo } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Locale, translations, defaultLocale, Translations } from './index';
+import { Locale, translations, defaultLocale } from './index';
 
 interface LanguageContextType {
   locale: Locale;
