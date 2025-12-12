@@ -16,6 +16,48 @@ const sessions = new Map<string, Session>();
 // Track which session each socket belongs to
 const socketToSession = new Map<string, string>();
 
+/**
+ * Sanitizes a session for a specific user.
+ * If votes are not revealed, hides other users' votes while keeping the user's own vote visible.
+ * This prevents information disclosure before the admin reveals votes.
+ */
+function sanitizeSessionForUser(session: Session, userId: string): Session {
+  // If votes are revealed, return full session
+  if (session.isRevealed) {
+    return session;
+  }
+
+  // Sanitize: hide other users' votes, keep only current user's vote
+  return {
+    ...session,
+    users: session.users.map((user) => ({
+      ...user,
+      vote: user.id === userId ? user.vote : null,
+      // Keep hasVoted so UI can show "voted" indicator
+    })),
+  };
+}
+
+/**
+ * Emits the session state to all users in a room, with each user receiving
+ * a sanitized version of the session where only their own vote is visible
+ * (until votes are revealed).
+ */
+function emitSessionState(
+  io: Server<ClientToServerEvents, ServerToClientEvents>,
+  session: Session
+): void {
+  const room = io.sockets.adapter.rooms.get(session.code);
+  if (!room) return;
+
+  for (const socketId of room) {
+    const socket = io.sockets.sockets.get(socketId);
+    if (socket) {
+      socket.emit('session:state', sanitizeSessionForUser(session, socketId));
+    }
+  }
+}
+
 export function setupSocketServer(
   io: Server<ClientToServerEvents, ServerToClientEvents>
 ) {
@@ -81,8 +123,8 @@ export function setupSocketServer(
       // Broadcast to all users in the session
       io.to(code).emit('user:joined', user);
       
-      // Send current session state to the new user
-      socket.emit('session:state', session);
+      // Send current session state to the new user (sanitized)
+      socket.emit('session:state', sanitizeSessionForUser(session, socket.id));
 
       console.log(`User ${name} joined session ${code}`);
       callback(true);
@@ -109,11 +151,15 @@ export function setupSocketServer(
         socketToSession.set(socket.id, code);
         socket.join(code);
 
-        // Notify others about the user coming back
-        io.to(code).emit('session:state', session);
+        // Notify others about the user coming back (sanitized per user)
+        emitSessionState(io, session);
         
         console.log(`User ${name} rejoined session ${code}`);
-        callback(true, existingUser);
+        // Sanitize the user object in the callback if votes aren't revealed
+        const sanitizedUser = session.isRevealed
+          ? existingUser
+          : { ...existingUser, vote: existingUser.id === socket.id ? existingUser.vote : null };
+        callback(true, sanitizedUser);
       } else {
         callback(false);
       }
@@ -135,7 +181,7 @@ export function setupSocketServer(
       user.isOnBreak = vote === '☕';
 
       io.to(code).emit('user:voted', socket.id);
-      io.to(code).emit('session:state', session);
+      emitSessionState(io, session);
 
       console.log(`User ${user.name} voted ${vote} in session ${code}`);
     });
@@ -164,7 +210,7 @@ export function setupSocketServer(
       user.name = newName;
 
       io.to(code).emit('user:name-changed', socket.id, newName);
-      io.to(code).emit('session:state', session);
+      emitSessionState(io, session);
 
       console.log(`User ${oldName} changed name to ${newName} in session ${code}`);
     });
@@ -195,7 +241,7 @@ export function setupSocketServer(
       });
 
       io.to(code).emit('task:created', task);
-      io.to(code).emit('session:state', session);
+      emitSessionState(io, session);
 
       console.log(`Admin created task "${title}" in session ${code}`);
     });
@@ -211,7 +257,7 @@ export function setupSocketServer(
       session.isRevealed = true;
 
       io.to(code).emit('votes:revealed');
-      io.to(code).emit('session:state', session);
+      emitSessionState(io, session);
 
       console.log(`Admin revealed votes in session ${code}`);
     });
@@ -236,7 +282,7 @@ export function setupSocketServer(
         }
       });
 
-      io.to(code).emit('session:state', session);
+      emitSessionState(io, session);
 
       console.log(`Admin cleared task in session ${code}`);
     });
@@ -267,7 +313,7 @@ export function setupSocketServer(
           const user = session.users[userIndex];
           session.users.splice(userIndex, 1);
           io.to(code).emit('user:left', socket.id);
-          io.to(code).emit('session:state', session);
+          emitSessionState(io, session);
           
           console.log(`User ${user.name} left session ${code}`);
         }
