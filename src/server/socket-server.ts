@@ -287,6 +287,10 @@ export function setupSocketServer(
       console.log(`Admin cleared task in session ${code}`);
     });
 
+    socket.on('keepalive:ping', () => {
+      socket.emit('keepalive:pong');
+    });
+
     // Handle disconnection
     socket.on('disconnect', () => {
       const code = socketToSession.get(socket.id);

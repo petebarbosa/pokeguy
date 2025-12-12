@@ -34,6 +34,7 @@ export interface ServerToClientEvents {
   'task:created': (task: Task) => void;
   'votes:revealed': () => void;
   'error': (message: string) => void;
+  'keepalive:pong': () => void;
 }
 
 export interface ClientToServerEvents {
@@ -45,4 +46,5 @@ export interface ClientToServerEvents {
   'admin:create-task': (title: string) => void;
   'admin:reveal-votes': () => void;
   'admin:new-task': () => void;
+  'keepalive:ping': () => void;
 }

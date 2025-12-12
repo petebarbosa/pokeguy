@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useSocket } from '@/hooks/use-socket';
 import { useSession } from '@/hooks/use-session';
+import { useKeepalive } from '@/hooks/use-keepalive';
 import { JoinModal } from '@/components/join-modal';
 import { UsersGrid } from '@/components/users-grid';
 import { VotingPanel } from '@/components/voting-panel';
@@ -31,6 +32,7 @@ export default function SessionPage({ params }: SessionPageProps) {
   const { t } = useTranslations();
 
   const { socket, isConnected } = useSocket();
+  useKeepalive({ socket, isConnected });
   const {
     session,
     currentUser,
