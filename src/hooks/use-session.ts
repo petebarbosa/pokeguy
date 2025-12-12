@@ -27,7 +27,7 @@ export function useSession({ socket, sessionCode, isAdmin }: UseSessionOptions) 
   const currentUser = useMemo(() => {
     if (!session || !socket?.id) return null;
     return session.users.find((u) => u.id === socket.id) || null;
-  }, [session, socket?.id]);
+  }, [session, socket]);
 
   // Listen to socket events
   useEffect(() => {
@@ -183,7 +183,7 @@ export function useSession({ socket, sessionCode, isAdmin }: UseSessionOptions) 
           'session:rejoin',
           sessionCode,
           name,
-          (success: boolean, _user?: User) => {
+          (success: boolean) => {
             if (success) {
               setError(null);
             }

@@ -45,32 +45,34 @@ export default function SessionPage({ params }: SessionPageProps) {
     newTask,
   } = useSession({ socket, sessionCode, isAdmin });
 
-  const [showJoinModal, setShowJoinModal] = useState(false);
+  // Join flow state: 'idle' -> 'checking' -> 'show_modal' | 'joined'
+  const [joinState, setJoinState] = useState<'idle' | 'checking' | 'show_modal' | 'joined'>('idle');
   const [showChangeNameModal, setShowChangeNameModal] = useState(false);
   const [joinError, setJoinError] = useState<string | null>(null);
-  const [isJoining, setIsJoining] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [hasAttemptedJoin, setHasAttemptedJoin] = useState(false);
   const prevRevealedRef = useRef(false);
+  const rejoinAttemptedRef = useRef(false);
 
-  // Handle initial connection and joining (using flag to prevent effect setState)
+  // Handle initial connection and auto-rejoin attempt
   useEffect(() => {
-    if (!isConnected || !socket || isAdmin || hasAttemptedJoin) return;
+    if (!isConnected || !socket || isAdmin || rejoinAttemptedRef.current) return;
 
-    setHasAttemptedJoin(true);
+    rejoinAttemptedRef.current = true;
 
     // Check for existing name in localStorage
     const savedName = localStorage.getItem(`pokeguy-name-${sessionCode}`);
     if (savedName) {
       rejoinSession(savedName).then((success) => {
-        if (!success) {
-          setShowJoinModal(true);
-        }
+        setJoinState(success ? 'joined' : 'show_modal');
       });
     } else {
-      setShowJoinModal(true);
+      // Use queueMicrotask to batch state update and avoid synchronous setState warning
+      queueMicrotask(() => setJoinState('show_modal'));
     }
-  }, [isConnected, socket, isAdmin, sessionCode, rejoinSession, hasAttemptedJoin]);
+  }, [isConnected, socket, isAdmin, sessionCode, rejoinSession]);
+
+  // Derive whether join modal should be shown
+  const showJoinModal = joinState === 'show_modal';
 
   // Trigger fireworks when votes are revealed
   useEffect(() => {
@@ -82,16 +84,14 @@ export default function SessionPage({ params }: SessionPageProps) {
 
   // Handle join
   const handleJoin = async (name: string) => {
-    setIsJoining(true);
     setJoinError(null);
 
     const success = await joinSession(name);
     if (success) {
-      setShowJoinModal(false);
+      setJoinState('joined');
     } else {
       setJoinError(error || t('joinModal.error'));
     }
-    setIsJoining(false);
     return success;
   };
 

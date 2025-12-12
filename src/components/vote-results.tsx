@@ -1,6 +1,6 @@
 'use client';
 
-import { User, VoteValue } from '@/types';
+import { User } from '@/types';
 import { Card } from '@/components/ui/card';
 import { useTranslations } from '@/i18n/context';
 
@@ -8,7 +8,7 @@ interface VoteResultsProps {
   users: User[];
 }
 
-const NUMERIC_VOTES: VoteValue[] = ['1', '2', '3', '5', '8'];
+const NUMERIC_VOTES = ['1', '2', '3', '5', '8'] as const;
 
 export function VoteResults({ users }: VoteResultsProps) {
   const { t } = useTranslations();
@@ -60,19 +60,26 @@ export function VoteResults({ users }: VoteResultsProps) {
 
       {/* Vote distribution */}
       <div className="space-y-2">
-        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('voteResults.voteDistribution')}</p>
-        <div className="flex flex-wrap gap-3">
-          {Object.entries(voteDistribution).map(([vote, count]) => (
-            <div
-              key={vote}
-              className="bg-gray-100 dark:bg-gray-700 rounded-lg px-4 py-2 flex items-center gap-2"
-            >
-              <span className="text-xl font-bold dark:text-gray-100">{vote}</span>
-              <span className="text-gray-600 dark:text-gray-300">
-                {count} {count !== 1 ? t('voteResults.votes') : t('voteResults.vote')}
-              </span>
-            </div>
-          ))}
+        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+          {t('voteResults.voteDistribution')}
+        </p>
+        <div className="flex justify-around items-end gap-2 pt-4 h-40 rounded-lg bg-gray-50 dark:bg-gray-900/50 px-2">
+          {NUMERIC_VOTES.map((vote) => {
+            const count = voteDistribution[vote] || 0;
+            const maxCount = Math.max(...Object.values(voteDistribution), 1);
+            const barHeight = count > 0 ? `${(count / maxCount) * 90}%` : '2px';
+
+            return (
+              <div key={vote} className="flex flex-col items-center gap-2 w-10 text-center">
+                <div className="text-xs font-bold text-gray-500 dark:text-gray-400">{count}</div>
+                <div
+                  className="w-full bg-blue-400 dark:bg-blue-600 rounded-t-md hover:bg-blue-500 dark:hover:bg-blue-500 transition-all"
+                  style={{ height: barHeight }}
+                />
+                <div className="text-sm font-semibold dark:text-gray-200">{vote}</div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -12,48 +12,41 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('system');
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
+function getInitialTheme(): Theme {
+  if (typeof window === 'undefined') return 'system';
+  return (localStorage.getItem('pokeguy-theme') as Theme | null) ?? 'system';
+}
 
-  useEffect(() => {
-    // Load saved theme from localStorage
-    const savedTheme = localStorage.getItem('pokeguy-theme') as Theme | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
+function resolveTheme(theme: Theme): 'light' | 'dark' {
+  if (typeof window === 'undefined') return 'light';
+  if (theme === 'system') {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  return theme;
+}
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setThemeState] = useState<Theme>(getInitialTheme);
+  const resolvedTheme = useMemo(() => resolveTheme(theme), [theme]);
+
+  const setTheme = useCallback((newTheme: Theme) => {
+    setThemeState(newTheme);
+    localStorage.setItem('pokeguy-theme', newTheme);
   }, []);
 
+  // Apply theme to document
   useEffect(() => {
     const root = window.document.documentElement;
-
-    // Determine the resolved theme
-    let resolved: 'light' | 'dark';
-    if (theme === 'system') {
-      resolved = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
-    } else {
-      resolved = theme;
-    }
-
-    setResolvedTheme(resolved);
-
-    // Update the document class
     root.classList.remove('light', 'dark');
-    root.classList.add(resolved);
+    root.classList.add(resolvedTheme);
+  }, [resolvedTheme]);
 
-    // Save to localStorage
-    localStorage.setItem('pokeguy-theme', theme);
-  }, [theme]);
-
-  // Listen for system theme changes
+  // Listen for system theme changes and force re-render
   useEffect(() => {
     if (theme !== 'system') return;
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e: MediaQueryListEvent) => {
-      setResolvedTheme(e.matches ? 'dark' : 'light');
       const root = window.document.documentElement;
       root.classList.remove('light', 'dark');
       root.classList.add(e.matches ? 'dark' : 'light');
@@ -63,8 +56,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [theme]);
 
+  const contextValue = useMemo(
+    () => ({ theme, setTheme, resolvedTheme }),
+    [theme, setTheme, resolvedTheme]
+  );
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme }}>
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );
