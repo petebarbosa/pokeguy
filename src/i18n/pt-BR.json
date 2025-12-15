@@ -76,5 +76,9 @@
     "system": "Sistema",
     "dark": "Escuro",
     "light": "Claro"
+  },
+  "taskHistory": {
+    "title": "Tarefas Votadas",
+    "noTasks": "Nenhuma tarefa votada ainda"
   }
 }

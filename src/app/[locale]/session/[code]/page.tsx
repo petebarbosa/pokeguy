@@ -15,6 +15,7 @@ import { AdminControls } from '@/components/admin-controls';
 import { VoteResults } from '@/components/vote-results';
 import { SessionEndedModal } from '@/components/session-ended-modal';
 import { ChangeNameModal } from '@/components/change-name-modal';
+import { TaskHistory } from '@/components/task-history';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { triggerFireworks } from '@/components/fireworks';
@@ -231,6 +232,11 @@ export default function SessionPage({ params }: SessionPageProps) {
               currentUserId={socket?.id}
             />
           </div>
+
+          {/* Task History */}
+          {session?.votedTasks && session.votedTasks.length > 0 && (
+            <TaskHistory tasks={session.votedTasks} />
+          )}
         </div>
       </main>
 

@@ -14,11 +14,19 @@ export interface Task {
   title: string;
 }
 
+export interface VotedTask {
+  id: string;
+  title: string;
+  score: number;
+  votedAt: number;
+}
+
 export interface Session {
-  code: string;         // UUID
-  adminId: string;      // Admin's socket ID
+  code: string;
+  adminId: string;
   users: User[];
   currentTask: Task | null;
+  votedTasks: VotedTask[];
   isVotingActive: boolean;
   isRevealed: boolean;
 }
