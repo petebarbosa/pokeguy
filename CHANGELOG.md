@@ -236,6 +236,30 @@ All user-facing text is fully translated across 3 languages:
 
 ## Recent Changes
 
+### December 2024 - Task History Feature
+
+Added a list of voted tasks with their final scores displayed below the participants section.
+
+#### Changes Made
+
+| File | Change |
+|------|--------|
+| `src/types/index.ts` | Added `VotedTask` interface and `votedTasks` array to `Session` |
+| `src/server/socket-server.ts` | Added score calculation and task history tracking on vote reveal |
+| `src/components/task-history.tsx` | New component to display voted tasks with scores |
+| `src/app/[locale]/session/[code]/page.tsx` | Integrated TaskHistory component |
+| `src/i18n/*.json` | Added translations for task history section |
+
+#### Technical Details
+
+- Tasks are added to history when votes are revealed
+- Score is calculated as the rounded average of numeric votes (same as VoteResults)
+- Non-numeric votes (☕, ❓) are excluded from score calculation
+- Tasks display in reverse chronological order (most recent first)
+- Score of 0 is shown as "—" for tasks with no numeric votes
+
+---
+
 ### December 2024 - Keep-Alive Feature for Render Free Tier
 
 Added a heartbeat mechanism to prevent Render's free tier from putting the server to sleep during discussion phases.

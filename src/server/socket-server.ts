@@ -4,6 +4,7 @@ import {
   Session,
   User,
   Task,
+  VotedTask,
   VoteValue,
   ServerToClientEvents,
   ClientToServerEvents,
@@ -12,6 +13,32 @@ import { getRandomCharacter } from '../lib/characters-data';
 
 // In-memory storage
 const sessions = new Map<string, Session>();
+
+const NUMERIC_VALUES = [1, 2, 3, 5, 8] as const;
+
+function calculateFinalScore(users: User[]): number {
+  const numericVotes = users
+    .filter(u => u.hasVoted && u.vote !== '☕' && u.vote !== '❓' && u.vote !== null)
+    .map(u => parseInt(u.vote as string, 10))
+    .filter(n => !isNaN(n));
+
+  if (numericVotes.length === 0) return 0;
+
+  const average = numericVotes.reduce((a, b) => a + b, 0) / numericVotes.length;
+
+  let closest: (typeof NUMERIC_VALUES)[number] = NUMERIC_VALUES[0];
+  let minDiff = Math.abs(average - closest);
+
+  for (const option of NUMERIC_VALUES) {
+    const diff = Math.abs(average - option);
+    if (diff < minDiff) {
+      minDiff = diff;
+      closest = option;
+    }
+  }
+
+  return closest;
+}
 
 // Track which session each socket belongs to
 const socketToSession = new Map<string, string>();
@@ -73,6 +100,7 @@ export function setupSocketServer(
         adminId: socket.id,
         users: [],
         currentTask: null,
+        votedTasks: [],
         isVotingActive: false,
         isRevealed: false,
       };
@@ -255,6 +283,17 @@ export function setupSocketServer(
       if (!session || session.adminId !== socket.id) return;
 
       session.isRevealed = true;
+
+      if (session.currentTask) {
+        const score = calculateFinalScore(session.users);
+        const votedTask: VotedTask = {
+          id: session.currentTask.id,
+          title: session.currentTask.title,
+          score,
+          votedAt: Date.now(),
+        };
+        session.votedTasks.push(votedTask);
+      }
 
       io.to(code).emit('votes:revealed');
       emitSessionState(io, session);
